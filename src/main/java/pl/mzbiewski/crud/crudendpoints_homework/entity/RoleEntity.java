@@ -1,11 +1,15 @@
 package pl.mzbiewski.crud.crudendpoints_homework.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Data
-public class RoleEntity {
+@Getter
+@Setter
+@RequiredArgsConstructor
+public class RoleEntity implements BaseEntity<RoleEntity> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
