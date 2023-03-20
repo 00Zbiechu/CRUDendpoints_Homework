@@ -1,45 +1,41 @@
 package pl.mzbiewski.crud.crudendpoints_homework.service;
 
 
-import pl.mzbiewski.crud.crudendpoints_homework.entity.BaseEntity;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import pl.mzbiewski.crud.crudendpoints_homework.mapper.UserMapper;
-import pl.mzbiewski.crud.crudendpoints_homework.model.BaseDTO;
-import pl.mzbiewski.crud.crudendpoints_homework.repository.BaseRepository;
+import pl.mzbiewski.crud.crudendpoints_homework.mapper.BaseMapper;
 import pl.mzbiewski.crud.crudendpoints_homework.validator.BaseValidator;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+public abstract class AbstractService<E,D>{
 
 
-public abstract class AbstractService<E extends BaseEntity<E>,D extends BaseDTO<D>>{
+    protected abstract JpaRepository<E,Long> getRepository();
 
-    private final BaseRepository<E> repository;
+    protected abstract BaseValidator<D> getValidator();
 
-    public AbstractService(BaseRepository<E> repository, BaseValidator<D> validator) {
-        this.repository = repository;
+    protected abstract BaseMapper<E,D> getMapper();
+
+
+    public List<D> get() {
+        return getRepository().findAll().stream().map(getMapper()::toDTO).collect(Collectors.toList());
     }
 
-
-
-    public List<E> get(){
-        return repository.findAll();
+    public void create(D dto){
+        getRepository().save(getMapper().toEntity(dto));
     }
 
-    public void create(E entity){
-        repository.save(entity);
+    public void update(Long id,D dto){
+        getRepository().deleteById(id);
+        getRepository().save(getMapper().toEntity(dto));
     }
 
-    public void update(Long id, E entity){
-        repository.delete(repository.findById(id).get());
-        repository.save(entity);
-
+    public void delete(D dto){
+        getRepository().delete(getMapper().toEntity(dto));
     }
-
-    public void delete(Long id){
-        repository.delete(repository.findById(id).get());
-    }
-
-
 
 
 }

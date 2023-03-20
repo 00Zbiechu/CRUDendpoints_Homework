@@ -1,10 +1,10 @@
 package pl.mzbiewski.crud.crudendpoints_homework.model;
 
 import lombok.Data;
-import pl.mzbiewski.crud.crudendpoints_homework.validator.BaseValidator;
+import lombok.Getter;
 
 @Data
-public class RoleDTO implements BaseDTO<RoleDTO> {
+public class RoleDTO {
 
     Long id;
     String role;

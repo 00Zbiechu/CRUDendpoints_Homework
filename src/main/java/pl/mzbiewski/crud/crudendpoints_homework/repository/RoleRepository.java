@@ -5,5 +5,8 @@ import org.springframework.stereotype.Repository;
 import pl.mzbiewski.crud.crudendpoints_homework.entity.RoleEntity;
 
 @Repository
-public interface RoleRepository extends BaseRepository<RoleEntity> {
+public interface RoleRepository extends JpaRepository<RoleEntity, Long> {
+
+
+
 }

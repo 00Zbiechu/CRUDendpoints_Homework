@@ -1,51 +1,37 @@
 package pl.mzbiewski.crud.crudendpoints_homework.controller;
 
-import jakarta.persistence.MappedSuperclass;
-import lombok.ToString;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.mzbiewski.crud.crudendpoints_homework.entity.BaseEntity;
-import pl.mzbiewski.crud.crudendpoints_homework.model.BaseDTO;
 import pl.mzbiewski.crud.crudendpoints_homework.service.AbstractService;
 
 import java.util.List;
 
+public abstract class BaseController<D,S extends AbstractService> {
 
-public abstract class BaseController<T extends BaseEntity<T>,D extends BaseDTO<D>> {
-
-    private final AbstractService<T,D> service;
-
-    public BaseController(AbstractService<T, D> service) {
-        this.service = service;
-    }
+    protected abstract S getService();
 
     @GetMapping
-    public ResponseEntity<List<T>> get(){
-        System.out.println(service.get().toString());
-        return ResponseEntity.ok(service.get());
+    List<D> get(){
+        return getService().get();
     }
 
     @PostMapping
-    public ResponseEntity<String> create(@RequestBody T body){
-        service.create(body);
-        return ResponseEntity.ok("Dodano");
+    public ResponseEntity<String> create(@RequestBody D dto){
+        getService().create(dto);
+        return ResponseEntity.ok("Zapisano");
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<String> update(@PathVariable Long id,@RequestBody T body){
-        service.update(id,body);
-        return ResponseEntity.ok("Zmieniono");
+    public ResponseEntity<String> update(@PathVariable Long id,@RequestBody D dto){
+        getService().update(id,dto);
+        return ResponseEntity.ok("update wykonany");
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<String> delete(@PathVariable Long id){
-        service.delete(id);
+    @DeleteMapping
+    public ResponseEntity<String> delete(@RequestBody D dto){
+        getService().delete(dto);
         return ResponseEntity.ok("Usunięto");
     }
-
-
-
 
 }
